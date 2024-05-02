@@ -1,12 +1,12 @@
-name = "-"
+name = "llm-as-api"
 compatibility_date = "2023-12-01"
 
 # [vars]
 # MY_VAR = "my-variable"
 
-# [[kv_namespaces]]
-# binding = "MY_KV_NAMESPACE"
-# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+kv_namespaces = [
+{ binding = "KV", id = "f408e682a64b49feb9a5a1dfe6998e8e" }
+]
 
 # [[r2_buckets]]
 # binding = "MY_BUCKET"
