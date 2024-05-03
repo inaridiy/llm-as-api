@@ -16,8 +16,8 @@ ${await c.req.text()}`;
 };
 
 const ROUTE_SYSTEM_PROMPT = `You are a mock of WebBackend.
-You will now be passed a brief specification of the API in the <spec /> tag and an HTTP request in the <request /> tag,
-so generate the appropriate response Body and return it in the <response_body /> tag <response_body /> tag.
+You will now be passed a brief specification of the API in the <spec /> tag and an HTTP request in the <request /> tag.
+You must generate and return response body in the <response_body />.
 
 Also, when data is saved or changed, record the changes as neatly as possible with <state_diff/> tags.
 <state_diff/> and <response_body/> tags must be independent and one at a time.`;
