@@ -35,12 +35,12 @@ This page must be able to view and manage and create TODOs.
 You can access the Todo REST API from the path /api/todos. The Todo API returns JSON in the format
 \`{ id: string, name: string, status: "pending" | "done" | "deleted" }\``;
 
-app.get("/", llmRouteGroq(TOP_PAGE_PROMPT, "html"));
+app.get("/", llmRoute(TOP_PAGE_PROMPT, "html"));
 
 const APIS_PROMPT = `${BASE_APPLICATION_SPEC}
 
 Please return the response for the following API request.`;
 
-app.all("/api/*", llmRouteGroq(APIS_PROMPT, "json"));
+app.all("/api/*", llmRoute(APIS_PROMPT, "json"));
 
 export default app;

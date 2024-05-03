@@ -10,6 +10,8 @@ You can execute SQL by fence code block with "sql" language tag. e.g.
 SELECT * FROM table_name;
 \`\`\`
 
+Never create a new table or drop a table. You can only execute SELECT, INSERT, UPDATE, DELETE, etc.
+
 ## Return Response
 You can return the response by fence code block with language tag. e.g.
 \`\`\`json or html or text, you must specify one of them

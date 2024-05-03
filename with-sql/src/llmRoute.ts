@@ -34,7 +34,6 @@ export const llmRoute =
       if (!("response" in sqlResultResponse) || !sqlResultResponse.response) throw new Error("No response from AI");
       messages.push({ role: "assistant", content: sqlResultResponse.response });
       const sqlResultContent = sqlResultResponse.response;
-      console.log(sqlResultContent);
       let html, json, text;
       ({ html, json, text, sql } = parseOutput(sqlResultContent));
       response = html || json || text;
@@ -49,8 +48,6 @@ export const llmRoute =
           sqlResult = (error as Error).message;
         }
       }
-
-      console.log(sql, sqlResult);
 
       if (response) {
         switch (responseFormat) {
