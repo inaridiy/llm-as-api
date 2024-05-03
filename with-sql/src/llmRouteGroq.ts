@@ -1,6 +1,7 @@
 import { Context } from "hono";
 import { formatPrompt, parseOutput } from "./utils";
 import { ROUTE_BASE_PROMPT, ROUTE_SQL_RESULT_PROMPT, ROUTE_SYSTEM_PROMPT } from "./prompt";
+import Groq from "groq-sdk";
 
 const getRequestText = async (c: Context) => {
   const query = new URLSearchParams(c.req.query()).toString();
@@ -11,9 +12,11 @@ ${await c.req.text()}`;
   return requestText;
 };
 
-export const llmRoute =
+export const llmRouteGroq =
   (routeSpecPrompt: string, responseFormat: "text" | "json" | "html") =>
-  async <T extends { Bindings: { AI: Ai; DB: D1Database } }>(c: Context<T>) => {
+  async <T extends { Bindings: { GROQ_API_KEY: string; DB: D1Database } }>(c: Context<T>) => {
+    const groq = new Groq({ apiKey: c.env.GROQ_API_KEY });
+
     const requestText = await getRequestText(c);
     const basePrompt = formatPrompt(ROUTE_BASE_PROMPT, { spec: routeSpecPrompt, request: requestText });
     const messages = [
@@ -25,15 +28,16 @@ export const llmRoute =
     let sql = "";
 
     for (let i = 0; i < 3; i++) {
-      const sqlResultResponse = await c.env.AI.run("@cf/meta/llama-3-8b-instruct", {
-        max_tokens: 4096,
-        stream: false,
+      const result = await groq.chat.completions.create({
+        model: "llama3-8b-8192",
+        temperature: 0.2,
+        max_tokens: 2048,
         messages,
+        stop: ["```\n"],
       });
 
-      if (!("response" in sqlResultResponse) || !sqlResultResponse.response) throw new Error("No response from AI");
-      messages.push({ role: "assistant", content: sqlResultResponse.response });
-      const sqlResultContent = sqlResultResponse.response;
+      const sqlResultContent = result.choices[0].message.content + "```\n";
+      messages.push({ role: "assistant", content: sqlResultContent });
       console.log(sqlResultContent);
       let html, json, text;
       ({ html, json, text, sql } = parseOutput(sqlResultContent));

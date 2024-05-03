@@ -5,6 +5,7 @@
     "migrate": "wrangler d1 migrations apply with-sql-demo --local"
   },
   "dependencies": {
+    "groq-sdk": "^0.3.3",
     "hono": "^4.2.9",
     "uuidv7": "^0.6.3"
   },

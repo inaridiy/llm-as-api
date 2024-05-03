@@ -7,9 +7,6 @@ const getRequestText = async (c: Context) => {
   const query = new URLSearchParams(c.req.query()).toString();
   const fullPath = query ? `${c.req.path}?${query}` : c.req.path;
   const requestText = `${c.req.method.toUpperCase()} ${fullPath} HTTP/1.1
-${Object.entries(c.req.header())
-  .map(([name, value]) => `${name}: ${value}`)
-  .join("\n")}
 ${await c.req.text()}`;
 
   return requestText;
