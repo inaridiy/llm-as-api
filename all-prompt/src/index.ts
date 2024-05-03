@@ -8,33 +8,7 @@ This page must be able to view and manage and create TODOs.
 Don't mock todos, Must fetch todos bia API.
 
 You can access the Todo REST API from the path /api/todos. The Todo API returns JSON in the format
-\`{ id: string, name: string, status: "pending" | "done" | "deleted" }\`
-
-This is layout of the top page:
-+--------------------------------------------------+
-|                 TODO App                        |
-+--------------------------------------------------+
-| [Add New Task]                                  |
-+--------------------------------------------------+
-|  Search: [_______________________]  [Search]    |
-+--------------------------------------------------+
-|  Filter: [All] [Active] [Completed]             |
-+--------------------------------------------------+
-|  Tasks:                                         |
-|                                                 |
-|  [ ] Task 1                          [Edit]     |
-|  [ ] Task 2                          [Edit]     |
-|  [x] Task 3                          [Edit]     |
-|  [ ] Task 4                          [Edit]     |
-|  [x] Task 5                          [Edit]     |
-|                                                 |
-|                                                 |
-|                                                 |
-|                                                 |
-|                                                 |
-|                                                 |
-|                                      [Delete]   |
-+--------------------------------------------------+`;
+\`{ id: string, name: string, status: "pending" | "done" | "deleted" }\``;
 
 app.get("/", llmRoute(TOP_PAGE_PROMPT, "html"));
 
