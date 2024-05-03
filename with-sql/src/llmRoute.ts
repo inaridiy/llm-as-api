@@ -25,7 +25,7 @@ The sequence of processing should follow the following flow.
 1. You will be given the specification of the API and the HTTP request.
 2. Plan the flow to return a response
 3. Return a response or execute SQL.
-4. If you need to return a response, you can write the response in the fenced code block. response will be returned to the browser.
+4. If you need to return a response, you can write the response in the fenced code block.
 5. If you need to execute SQL, you can write SQL in the fenced code block.
 6. You receive the result of the SQL execution and back to step 3.
 
@@ -39,8 +39,8 @@ You may execute SQL up to two times in total, and only one statement may be exec
 
 # Return a response
 You can return a response by writing the response in the fenced code block. e.g.
-\`\`\`response
-HTML or JSON or text
+\`\`\`html or json or text
+{"message": "Hello, World!"}
 \`\`\`
 
 The response you create is immediately returned to the browser. Never allow the browser to interpret it directly!`;
@@ -79,7 +79,9 @@ export const llmRoute =
       messages.push({ role: "assistant", content: sqlResultResponse.response });
       const sqlResultContent = sqlResultResponse.response;
       console.log(sqlResultContent);
-      ({ response, sql } = parseOutput(sqlResultContent));
+      let html, json, text;
+      ({ html, json, text, sql } = parseOutput(sqlResultContent));
+      response = html || json || text;
 
       let sqlResult = "";
 
