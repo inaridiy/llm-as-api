@@ -43,4 +43,8 @@ Please return the response for the following API request.`;
 
 app.all("/api/*", llmRoute(APIS_PROMPT, "json"));
 
+app.onError((e, c) => {
+  return c.text(e.message);
+});
+
 export default app;
