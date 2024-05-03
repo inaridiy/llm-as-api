@@ -33,7 +33,7 @@ export const llmRoute =
 
       if (!("response" in sqlResultResponse) || !sqlResultResponse.response) throw new Error("No response from AI");
       messages.push({ role: "assistant", content: sqlResultResponse.response });
-      const sqlResultContent = sqlResultResponse.response;
+      const sqlResultContent = sqlResultResponse.response.split("```\n")[0] + "```\n";
       let html, json, text;
       ({ html, json, text, sql } = parseOutput(sqlResultContent));
       response = html || json || text;
