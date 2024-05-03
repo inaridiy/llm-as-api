@@ -1,19 +1,23 @@
 import { Hono } from "hono";
-import { cache } from "hono/cache";
 import { llmRoute } from "./llmRoute";
 
 const app = new Hono();
 
-const TOP_PAGE_PROMPT = `Please return the top page of a simplest TODO application in HTML.
-Please keep it as simple as possible and also allow editing of TODOs in Form.
+const TOP_PAGE_PROMPT = `Please return the top page of a simple TODO application in HTML.
+This page must be able to view and manage and create TODOs. Also, TODOs must be retrieved via API!
 
-You can write TODO from /api/todos is REST API in the following format
-{ name: string, status: string }`;
+You can access the Todo REST API from the path /api/todos. The Todo API returns JSON in the format
+{ id: string, name: string, status: "pending" | "done" | "deleted" }`;
 
-app.get("/", cache({ cacheName: "Top page" }), llmRoute(TOP_PAGE_PROMPT, "html"));
+app.get("/", llmRoute(TOP_PAGE_PROMPT, "html"));
 
 const APIS_PROMPT = `As a REST backend API for a simple TODO app, return JSON as appropriate.
-The TODO should be in the format { name: string, status: string }.`;
+The TODO should be in the format { name: string, status: "pending" | "done" | "deleted" }.
+
+Initial TODOs are as follows:
+- { id: 1, name: "Buy milk", status: "pending" }
+- { id: 2, name: "Call mom", status: "pending" }
+- { id: 3, name: "Go to the gym", status: "done" }`;
 
 app.all("/api/*", llmRoute(APIS_PROMPT, "json"));
 

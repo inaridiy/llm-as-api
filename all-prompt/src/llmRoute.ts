@@ -4,7 +4,9 @@ import { uuidv7 } from "uuidv7";
 import { formatPrompt } from "./utils";
 
 const getRequestText = async (c: Context) => {
-  const requestText = `${c.req.method.toUpperCase()} ${c.req.path} HTTP/1.1
+  const query = new URLSearchParams(c.req.query()).toString();
+  const fullPath = query ? `${c.req.path}?${query}` : c.req.path;
+  const requestText = `${c.req.method.toUpperCase()} ${fullPath} HTTP/1.1
 ${Object.entries(c.req.header())
   .map(([name, value]) => `${name}: ${value}`)
   .join("\n")}
@@ -17,7 +19,8 @@ const ROUTE_SYSTEM_PROMPT = `You are a mock of WebBackend.
 You will now be passed a brief specification of the API in the <spec /> tag and an HTTP request in the <request /> tag,
 so generate the appropriate response Body and return it in the <response_body /> tag <response_body /> tag.
 
-Also, when data is saved or changed, record the changes as neatly as possible with <state_diff/> tags.`;
+Also, when data is saved or changed, record the changes as neatly as possible with <state_diff/> tags.
+<state_diff/> and <response_body/> tags must be independent and one at a time.`;
 
 const ROUTE_BASE_PROMPT = `<state_diff_history>
 {{state_diff_history}}
@@ -44,7 +47,7 @@ export const llmRoute =
 
     const result = await anthropic.messages.create({
       max_tokens: 2048,
-      temperature: 0,
+      temperature: 0.6,
       model: "claude-3-haiku-20240307",
       system: ROUTE_SYSTEM_PROMPT,
       messages: [{ role: "user", content: prompt }],
@@ -55,7 +58,7 @@ export const llmRoute =
     const response = content.match(/<response_body>([\s\S]*?)<\/response_body>/)?.[1] ?? "";
     const sideEffects = content.match(/<state_diff>([\s\S]*?)<\/state_diff>/)?.[1];
 
-    if (sideEffects) await c.env.KV.put(`state_diff/${uuidv7()}`, sideEffects);
+    if (sideEffects && c.req.method.toUpperCase() !== "GET") await c.env.KV.put(`state_diff/${uuidv7()}`, sideEffects);
 
     switch (responseFormat) {
       case "text":
