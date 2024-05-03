@@ -8,7 +8,7 @@ This page must be able to view and manage and create TODOs.
 Don't mock todos, Must fetch todos bia API.
 
 You can access the Todo REST API from the path /api/todos. The Todo API returns JSON in the format
-{ id: string, name: string, status: "pending" | "done" | "deleted" }`;
+\`{ id: string, name: string, status: "pending" | "done" | "deleted" }\``;
 
 app.get("/", llmRoute(TOP_PAGE_PROMPT, "html"));
 

@@ -1,7 +1,8 @@
 {
   "scripts": {
     "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy --minify src/index.ts"
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "migrate": "wrangler d1 migrations apply with-sql-demo --local"
   },
   "dependencies": {
     "hono": "^4.2.9",
